@@ -1,5 +1,9 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_recommendation_app/display/pages/card_back.dart';
+import 'package:movie_recommendation_app/display/pages/card_front.dart';
+import 'package:movie_recommendation_app/domain/bloc/movie/movie_bloc.dart';
 import 'package:movie_recommendation_app/domain/models/item_model.dart';
 import 'package:movie_recommendation_app/display/guidelines/colors.dart'
     as Guidelines;
@@ -56,15 +60,17 @@ class _HomeState extends State<Home> {
         padding: EdgeInsets.all(15.0),
         child: Container(
           child: FlipCard(
-            front: null,
-            back: null,
+            key: cardKey,
+            flipOnTouch: false,
+            front: CardFront(),
+            back: CardBack(),
           ),
         ),
       ),
       bottomNavigationBar: Container(
         height: 100,
         padding: EdgeInsets.all(15.0),
-        color: Colors.white,
+        color: Colors.transparent,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -206,6 +212,77 @@ class _HomeState extends State<Home> {
                         ],
                       ),
                     ],
+                  ),
+            clicked
+                ? Container(
+                    height: 40,
+                    child: RaisedButton(
+                      color: Guidelines.Colors.mainColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          movieBloc.drainStream();
+                          cardKey.currentState.toggleCard();
+                          clicked = false;
+                        });
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            EvaIcons.arrowBackOutline,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 5.0,
+                          ),
+                          Text(
+                            'Back',
+                            style: TextStyle(
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                : Container(
+                    height: 40.0,
+                    child: RaisedButton(
+                      color: Guidelines.Colors.mainColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      onPressed: () {
+                        movieBloc.getMovie(
+                            _selectedGenre.value, _selectedScore.value);
+                        setState(() {
+                          clicked = true;
+                        });
+                        cardKey.currentState.toggleCard();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(EvaIcons.search, color: Colors.white),
+                          SizedBox(
+                            width: 5.0,
+                          ),
+                          Text(
+                            'Suggest',
+                            style: TextStyle(
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                   ),
           ],
         ),

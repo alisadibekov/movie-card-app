@@ -29,8 +29,8 @@ class MovieModel {
         tagline = json['tagline'] == null ? '' : json['tagline'],
         type = json['classification'] == null ? '' : json['classification'],
         duration = json['runtime'] == null ? '' : json['runtime'],
-        realeaseDate = json['release_on'] == null ? '' : json['release_on'],
+        realeaseDate = json['released_on'] == null ? '' : json['released_on'],
         imdbRate = json['imdb_rating'] == null
             ? 0.0
-            : double.parse('imdb_rating').toString();
+            : double.parse(json['imdb_rating'].toString());
 }
